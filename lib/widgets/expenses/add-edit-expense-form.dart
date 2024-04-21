@@ -1,11 +1,15 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:focus_detector_v2/focus_detector_v2.dart';
 import 'package:intl/intl.dart';
 import 'package:ipaidmoney/models/expenses/expense-model.dart';
 import 'package:ipaidmoney/models/init.dart';
-import 'package:flutter/services.dart' as FlutterService;
+import 'package:ipaidmoney/utils/extentions.dart';
+import 'package:ipaidmoney/widgets/defaults/default-chip-with-dropdown.dart';
 
 class AddEditExpenseForm extends StatefulWidget {
   final Expense? expense;
@@ -17,14 +21,15 @@ class AddEditExpenseForm extends StatefulWidget {
 
 class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Expense expense = Expense('', 0.0, DateTime.now());
+  Expense expense =
+      Expense('', 0.0, DateTime.now(), ExpenseCategory.food, PaymentMethod.account);
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      expense = widget.expense ?? Expense('', 0.0, DateTime.now());
+      expense = widget.expense ?? expense;
     });
   }
 
@@ -86,6 +91,7 @@ class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
           left: 12,
           right: 12,
         ),
+        width: double.maxFinite,
         child: FormBuilder(
           key: _formKey,
           child: Column(
@@ -159,25 +165,72 @@ class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
                 height: 10,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    child: Chip(
-                      label: Text(
-                        DateFormat('MMMM dd, yyyy').format(expense.date),
-                        style: const TextStyle(color: Colors.green),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _selectDate(context);
+                            },
+                            child: Chip(
+                              label: Text(
+                                DateFormat('MMMM dd, yyyy')
+                                    .format(expense.date),
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    color: Colors.white12), // Outline color
+                                borderRadius:
+                                    BorderRadius.circular(10), // Border radius
+                              ),
+                              avatar: const Icon(Icons.calendar_month),
+                              backgroundColor:
+                                  Theme.of(context).dialogBackgroundColor,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          ChipWithDropdownPopup<PaymentMethod>(
+                            initialSelectedValue: expense.paymentMethod,
+                            options: PaymentMethod.values,
+                            icon: const Icon(
+                              Icons.currency_rupee,
+                              color: Colors.white70,
+                            ),
+                            renderLabel: (paymentMethod) {
+                              return paymentMethod.name.capitalize();
+                            },
+                            onChanged: (paymentMethod) {
+                              expense.paymentMethod = paymentMethod;
+                            },
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          ChipWithDropdownPopup<ExpenseCategory>(
+                            initialSelectedValue: expense.category,
+                            options: ExpenseCategory.values,
+                            icon: const Icon(
+                              Icons.category_outlined,
+                              color: Colors.white70,
+                            ),
+                            renderLabel: (category) {
+                              return category.name.capitalize();
+                            },
+                            onChanged: (expenseCategory) {
+                              expense.category = expenseCategory;
+                            },
+                          ),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                        ],
                       ),
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(
-                            color: Colors.white12), // Outline color
-                        borderRadius:
-                            BorderRadius.circular(10), // Border radius
-                      ),
-                      avatar: const Icon(Icons.calendar_month),
-                      backgroundColor: Theme.of(context).dialogBackgroundColor,
                     ),
                   ),
                   Container(
