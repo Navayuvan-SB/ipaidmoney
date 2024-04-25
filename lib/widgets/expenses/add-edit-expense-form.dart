@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:calendar_time/calendar_time.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,8 +22,8 @@ class AddEditExpenseForm extends StatefulWidget {
 
 class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Expense expense =
-      Expense('', 0.0, DateTime.now(), ExpenseCategory.food, PaymentMethod.account);
+  Expense expense = Expense(
+      '', 0.0, DateTime.now(), ExpenseCategory.food, PaymentMethod.account);
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -177,8 +178,7 @@ class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
                             },
                             child: Chip(
                               label: Text(
-                                DateFormat('MMMM dd, yyyy')
-                                    .format(expense.date),
+                                expense.date.toHumanRedable(),
                                 style: const TextStyle(color: Colors.green),
                               ),
                               shape: RoundedRectangleBorder(
@@ -232,6 +232,9 @@ class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
                         ],
                       ),
                     ),
+                  ),
+                  const SizedBox(
+                    width: 8,
                   ),
                   Container(
                     decoration: BoxDecoration(

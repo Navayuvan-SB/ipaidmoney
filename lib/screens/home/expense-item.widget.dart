@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:ipaidmoney/models/expenses/expense-model.dart';
 import 'package:ipaidmoney/models/init.dart';
+import 'package:ipaidmoney/utils/configs.dart';
+import 'package:ipaidmoney/utils/extentions.dart';
 
 class ExpenseItem extends StatelessWidget {
   final Expense expense;
@@ -11,6 +12,10 @@ class ExpenseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color categoryColor = CategoryColorConfig[expense.category]!;
+    IconData paymentMethodIcon =
+        PaymentMethodIconConfig[expense.paymentMethod]!;
+
     return Dismissible(
       key: Key(expense.id.toString()),
       direction: DismissDirection.endToStart,
@@ -67,27 +72,68 @@ class ExpenseItem extends StatelessWidget {
       },
       child: ListTile(
         leading: const Icon(Icons.payments, size: 30),
-        titleAlignment: ListTileTitleAlignment.titleHeight,
         visualDensity: VisualDensity.comfortable,
-        title: Text(expense.name),
-        subtitle: Row(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Icon(
-              Icons.schedule,
-              size: 14,
-            ),
-            const SizedBox(
-              width: 4,
+            Text(
+              expense.name,
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
             ),
             Text(
-              DateFormat('MMMM dd, yyyy').format(expense.date),
-              style: const TextStyle(fontSize: 12),
+              "-Rs. ${expense.cost}",
+              style: TextStyle(
+                  color: Colors.red[300],
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600),
             )
           ],
         ),
-        trailing: Text(
-          "- ₹ ${expense.cost}",
-          style: TextStyle(color: Colors.red[300], fontSize: 16),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Theme(
+                data: Theme.of(context)
+                    .copyWith(canvasColor: categoryColor.withOpacity(0.1)),
+                child: Chip(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  label: Text(
+                    expense.category.name.capitalize(),
+                    style: TextStyle(
+                        color: categoryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  labelPadding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: -4),
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(6), // Set the border radius here
+                    side: const BorderSide(
+                        color: Colors.transparent), // Add a border
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    paymentMethodIcon,
+                    size: 14,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Text(expense.paymentMethod.name.capitalize()),
+                ],
+              )
+            ],
+          ),
         ),
         onTap: onTap,
       ),

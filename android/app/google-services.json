@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "196820754064",
+    "project_id": "ipaidmoney-ff6b4",
+    "storage_bucket": "ipaidmoney-ff6b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196820754064:android:2583fa00c2f5f24db74215",
+        "android_client_info": {
+          "package_name": "com.ipaidmoney.ipaidmoney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPXuiSpIDGIHuUTqV1c5ogvjOItZm2UHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -37,4 +37,16 @@ class Expense {
   Expense clone() {
     return Expense(name, cost, date, category, paymentMethod);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Expense &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          cost == other.cost &&
+          date == other.date &&
+          category == other.category &&
+          paymentMethod == other.paymentMethod;
 }
