@@ -65,7 +65,12 @@ int _expenseEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.category.name.length * 3;
+  {
+    final value = object.category;
+    if (value != null) {
+      bytesCount += 3 + value.name.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.paymentMethod.name.length * 3;
   return bytesCount;
@@ -77,7 +82,7 @@ void _expenseSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.category.name);
+  writer.writeString(offsets[0], object.category?.name);
   writer.writeDouble(offsets[1], object.cost);
   writer.writeDateTime(offsets[2], object.date);
   writer.writeString(offsets[3], object.name);
@@ -94,8 +99,7 @@ Expense _expenseDeserialize(
     reader.readString(offsets[3]),
     reader.readDouble(offsets[1]),
     reader.readDateTime(offsets[2]),
-    _ExpensecategoryValueEnumMap[reader.readStringOrNull(offsets[0])] ??
-        ExpenseCategory.shopping,
+    _ExpensecategoryValueEnumMap[reader.readStringOrNull(offsets[0])],
     _ExpensepaymentMethodValueEnumMap[reader.readStringOrNull(offsets[4])] ??
         PaymentMethod.credit,
   );
@@ -111,8 +115,8 @@ P _expenseDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (_ExpensecategoryValueEnumMap[reader.readStringOrNull(offset)] ??
-          ExpenseCategory.shopping) as P;
+      return (_ExpensecategoryValueEnumMap[reader.readStringOrNull(offset)])
+          as P;
     case 1:
       return (reader.readDouble(offset)) as P;
     case 2:
@@ -238,8 +242,24 @@ extension ExpenseQueryWhere on QueryBuilder<Expense, Expense, QWhereClause> {
 
 extension ExpenseQueryFilter
     on QueryBuilder<Expense, Expense, QFilterCondition> {
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> categoryIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'category',
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> categoryIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'category',
+      ));
+    });
+  }
+
   QueryBuilder<Expense, Expense, QAfterFilterCondition> categoryEqualTo(
-    ExpenseCategory value, {
+    ExpenseCategory? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -252,7 +272,7 @@ extension ExpenseQueryFilter
   }
 
   QueryBuilder<Expense, Expense, QAfterFilterCondition> categoryGreaterThan(
-    ExpenseCategory value, {
+    ExpenseCategory? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -267,7 +287,7 @@ extension ExpenseQueryFilter
   }
 
   QueryBuilder<Expense, Expense, QAfterFilterCondition> categoryLessThan(
-    ExpenseCategory value, {
+    ExpenseCategory? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -282,8 +302,8 @@ extension ExpenseQueryFilter
   }
 
   QueryBuilder<Expense, Expense, QAfterFilterCondition> categoryBetween(
-    ExpenseCategory lower,
-    ExpenseCategory upper, {
+    ExpenseCategory? lower,
+    ExpenseCategory? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -986,7 +1006,7 @@ extension ExpenseQueryProperty
     });
   }
 
-  QueryBuilder<Expense, ExpenseCategory, QQueryOperations> categoryProperty() {
+  QueryBuilder<Expense, ExpenseCategory?, QQueryOperations> categoryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'category');
     });

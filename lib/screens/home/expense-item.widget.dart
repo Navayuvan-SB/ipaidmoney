@@ -12,7 +12,9 @@ class ExpenseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color categoryColor = CategoryColorConfig[expense.category]!;
+    Color categoryColor = expense.category != null
+        ? CategoryColorConfig[expense.category]!
+        : Colors.red;
     IconData paymentMethodIcon =
         PaymentMethodIconConfig[expense.paymentMethod]!;
 
@@ -102,13 +104,21 @@ class ExpenseItem extends StatelessWidget {
                     .copyWith(canvasColor: categoryColor.withOpacity(0.1)),
                 child: Chip(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  label: Text(
-                    expense.category.name.capitalize(),
-                    style: TextStyle(
-                        color: categoryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
-                  ),
+                  label: expense.category != null
+                      ? Text(
+                          expense.category!.name.capitalize(),
+                          style: TextStyle(
+                              color: categoryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                        )
+                      : Text(
+                          "Uncategorized",
+                          style: TextStyle(
+                              color: categoryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                        ),
                   labelPadding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: -4),
                   padding: EdgeInsets.zero,

@@ -23,7 +23,7 @@ class AddEditExpenseForm extends StatefulWidget {
 class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   Expense expense = Expense(
-      '', 0.0, DateTime.now(), ExpenseCategory.food, PaymentMethod.account);
+      '', 0.0, DateTime.now(), null, PaymentMethod.account);
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -214,6 +214,7 @@ class _AddEditExpenseFormState extends State<AddEditExpenseForm> {
                           ),
                           ChipWithDropdownPopup<ExpenseCategory>(
                             initialSelectedValue: expense.category,
+                            placeholder: "Category",
                             options: ExpenseCategory.values,
                             icon: const Icon(
                               Icons.category_outlined,

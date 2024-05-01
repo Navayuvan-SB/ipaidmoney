@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ipaidmoney/widgets/defaults/default-bottom-sheet.dart';
 
 class ChipWithDropdownPopup<T> extends StatefulWidget {
-  final T initialSelectedValue;
+  final T? initialSelectedValue;
+  final String? placeholder;
   final List<T> options;
   final String Function(T) renderLabel;
   final Icon? icon;
@@ -15,6 +16,7 @@ class ChipWithDropdownPopup<T> extends StatefulWidget {
     required this.renderLabel,
     this.icon,
     this.onChanged,
+    this.placeholder,
   });
 
   @override
@@ -23,7 +25,7 @@ class ChipWithDropdownPopup<T> extends StatefulWidget {
 }
 
 class _ChipWithDropdownPopupState<T> extends State<ChipWithDropdownPopup<T>> {
-  late T _selectedValue;
+  late T? _selectedValue;
 
   @override
   void initState() {
@@ -37,7 +39,9 @@ class _ChipWithDropdownPopupState<T> extends State<ChipWithDropdownPopup<T>> {
       label: Row(
         children: [
           Text(
-            widget.renderLabel(_selectedValue),
+            _selectedValue != null
+                ? widget.renderLabel(_selectedValue!)
+                : widget.placeholder ?? "Choose",
             style: const TextStyle(color: Colors.white70),
           ),
           const SizedBox(
@@ -83,8 +87,8 @@ class _ChipWithDropdownPopupState<T> extends State<ChipWithDropdownPopup<T>> {
                   _selectedValue = option as T;
                 });
                 Navigator.pop(context);
-                if (widget.onChanged != null) {
-                  widget.onChanged!(_selectedValue);
+                if (widget.onChanged != null && _selectedValue != null) {
+                  widget.onChanged!(_selectedValue!);
                 }
               },
             );

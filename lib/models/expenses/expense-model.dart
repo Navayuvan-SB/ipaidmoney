@@ -17,7 +17,7 @@ class Expense {
   DateTime date;
 
   @Enumerated(EnumType.name)
-  ExpenseCategory category;
+  ExpenseCategory? category;
 
   @Enumerated(EnumType.name)
   PaymentMethod paymentMethod;
@@ -29,7 +29,7 @@ class Expense {
       'name': name,
       'cost': cost,
       'date': date,
-      'category': category.name,
+      'category': category?.name,
       'paymentMethod': paymentMethod.name
     };
   }

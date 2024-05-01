@@ -8,6 +8,7 @@ import 'package:ipaidmoney/screens/home/today.tab.dart';
 import 'package:ipaidmoney/widgets/defaults/default-bottom-sheet.dart';
 import 'package:ipaidmoney/widgets/expenses/add-edit-expense-form.dart';
 import 'package:isar/isar.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 List<Widget> tabs = <Widget>[
   const TodayTab(),
@@ -67,13 +68,13 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
             NavigationDestination(
-              selectedIcon: Icon(Icons.calendar_today),
-              icon: Icon(Icons.calendar_today_outlined),
+              selectedIcon: Icon(LucideIcons.calendar),
+              icon: Icon(LucideIcons.calendar),
               label: 'Today',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.receipt),
-              icon: Icon(Icons.receipt_outlined),
+              selectedIcon: Icon(LucideIcons.notepadText),
+              icon: Icon(LucideIcons.notepadText),
               label: 'All',
             ),
           ],
